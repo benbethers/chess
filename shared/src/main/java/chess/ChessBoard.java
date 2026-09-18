@@ -1,6 +1,5 @@
 package chess;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.List;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    public List<List<ChessPiece>> board = new ArrayList<>(Arrays.asList());
 
     ChessPiece[][] squares = new ChessPiece[8][8];
     public ChessBoard() {
@@ -45,6 +43,6 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        this.squares() = new ChessBoard();
+        squares = new ChessPiece[8][8];
     }
 }
