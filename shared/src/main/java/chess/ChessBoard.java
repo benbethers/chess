@@ -13,9 +13,7 @@ import java.util.List;
 public class ChessBoard {
 
     ChessPiece[][] squares = new ChessPiece[8][8];
-    public ChessBoard() {
-
-    }
+    public ChessBoard() {}
 
     /**
      * Adds a chess piece to the chessboard
