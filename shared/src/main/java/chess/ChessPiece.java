@@ -12,12 +12,12 @@ import java.util.List;
  */
 public class ChessPiece {
     private ChessGame.TeamColor pieceColor;
-    private ChessPiece.PieceType pieceType;
+    private ChessPiece.PieceType type;
 
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
          this.pieceColor = pieceColor;
-         this.pieceType = pieceType;
+         this.type = type;
     }
 
     /**
@@ -43,7 +43,7 @@ public class ChessPiece {
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        return this.pieceType;
+        return this.type;
     }
 
     /**
@@ -55,16 +55,28 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
-        switch (pieceType) {
+
+        switch (type) {
             case PAWN:
                 try {
                     if (this.pieceColor.equals("WHITE")) {
+                        // Regular pawn advance
                         if (!board.squareOccupied(myPosition.getRow() + 1, myPosition.getColumn())) {
                             possibleMoves.add(
                                     new ChessMove(
                                         myPosition,
                                         new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn()),
-                                        null
+                                        this.type
+                                    )
+                            );
+                        }
+                        // Possible pawn capture
+                        if (!board.squareOccupied(myPosition.getRow() + 1, myPosition.getColumn())) {
+                            possibleMoves.add(
+                                    new ChessMove(
+                                            myPosition,
+                                            new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn()),
+                                            this.type
                                     )
                             );
                         }
@@ -74,7 +86,7 @@ public class ChessPiece {
                                     new ChessMove(
                                             myPosition,
                                             new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn()),
-                                            null
+                                            this.type
                                     )
                             );
                         }
