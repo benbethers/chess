@@ -53,8 +53,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        List<String> posibleMoves =
+        //Collection<ChessMove> possibleMoves = new Collection<ChessMoves>();
 
-        return possibleMoves[][]
     }
 }
