@@ -55,41 +55,46 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
+        int verticalProgression = 0;
+        int horizonalProgression = 0;
 
         switch (type) {
             case PAWN:
                 try {
                     if (this.pieceColor.equals("WHITE")) {
-                        // Regular pawn advance
-                        if (!board.squareOccupied(myPosition.getRow() + 1, myPosition.getColumn())) {
-                            possibleMoves.add(
-                                    new ChessMove(
-                                        myPosition,
-                                        new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn()),
-                                        this.type
-                                    )
-                            );
-                        }
-                        // Possible pawn capture
-                        if (!board.squareOccupied(myPosition.getRow() + 1, myPosition.getColumn())) {
-                            possibleMoves.add(
-                                    new ChessMove(
-                                            myPosition,
-                                            new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn()),
-                                            this.type
-                                    )
-                            );
-                        }
+                        verticalProgression = 1;
                     } else {
-                        if (board.squareOccupied(myPosition.getRow() - 1, myPosition.getColumn())) {
-                            possibleMoves.add(
-                                    new ChessMove(
-                                            myPosition,
-                                            new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn()),
-                                            this.type
-                                    )
-                            );
-                        }
+                        verticalProgression = -1;
+                    }
+                    // Regular pawn advance
+                    if (!board.squareOccupied(myPosition.getRow() + verticalProgression, myPosition.getColumn())) {
+                        possibleMoves.add(
+                                new ChessMove(
+                                        myPosition,
+                                        new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn()),
+                                        this.type
+                                )
+                        );
+                    }
+                    // Possible pawn capture right
+                    if (board.squareOccupied(myPosition.getRow() + verticalProgression, myPosition.getColumn() + 1)) {
+                        possibleMoves.add(
+                                new ChessMove(
+                                        myPosition,
+                                        new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() + 1),
+                                        this.type
+                                )
+                        );
+                    }
+                    // Possible pawn capture left
+                    if (board.squareOccupied(myPosition.getRow() + verticalProgression, (myPosition.getColumn()) - 1)) {
+                        possibleMoves.add(
+                                new ChessMove(
+                                        myPosition,
+                                        new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() - 1),
+                                        this.type
+                                )
+                        );
                     }
                 } catch (Exception e){
                     break;
@@ -97,9 +102,9 @@ public class ChessPiece {
                 break;
             case ROOK:
                 break;
-            case KNIGHT:
-                break;
             case BISHOP:
+                break;
+            case KNIGHT:
                 break;
             case QUEEN:
                 break;
