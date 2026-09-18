@@ -33,7 +33,7 @@ public class ChessBoard {
     }
 
     public boolean squareOccupied(int row, int col) throws Exception {
-        if ((row > 8 || row < 1) || (col > 8 || col < 0)) {
+        if ((row > 8 || row < 1) || (col > 8 || col < 1)) {
             throw new Exception("Position out of bounds");
         }
 

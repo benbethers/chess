@@ -61,9 +61,9 @@ public class ChessPiece {
         switch (type) {
             case PAWN:
                 try {
-                    if (this.pieceColor.equals("WHITE")) {
+                    if (this.pieceColor == ChessGame.TeamColor.WHITE) {
                         verticalProgression = 1;
-                    } else {
+                    } else if (this.pieceColor == ChessGame.TeamColor.BLACK){
                         verticalProgression = -1;
                     }
                     // Regular pawn advance
@@ -92,6 +92,33 @@ public class ChessPiece {
                                 new ChessMove(
                                         myPosition,
                                         new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() - 1),
+                                        this.type
+                                )
+                        );
+                    }
+                    if (
+                            this.pieceColor == ChessGame.TeamColor.WHITE
+                            && myPosition.getRow() == 2
+                            && !board.squareOccupied(myPosition.getRow() + 1, (myPosition.getColumn()))
+                            && !board.squareOccupied(myPosition.getRow() + 2, (myPosition.getColumn()))
+                    ) {
+                        possibleMoves.add(
+                                new ChessMove(
+                                        myPosition,
+                                        new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn()),
+                                        this.type
+                                )
+                        );
+                    } else if (
+                            this.pieceColor == ChessGame.TeamColor.BLACK
+                            && myPosition.getRow() == 7
+                            && !board.squareOccupied(myPosition.getRow() - 1, (myPosition.getColumn()))
+                            && !board.squareOccupied(myPosition.getRow() - 2, (myPosition.getColumn()))
+                    ) {
+                        possibleMoves.add(
+                                new ChessMove(
+                                        myPosition,
+                                        new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn()),
                                         this.type
                                 )
                         );
