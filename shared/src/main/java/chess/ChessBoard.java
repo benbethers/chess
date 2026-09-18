@@ -1,9 +1,5 @@
 package chess;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -34,6 +30,22 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         return squares[position.getRow()-1][position.getColumn()-1];
+    }
+
+    public boolean squareOccupied(int row, int col) throws Exception {
+        if ((row > 8 || row < 1) || (col > 8 || col < 0)) {
+            throw new Exception("Position out of bounds");
+        }
+
+        try {
+            ChessPosition testPosition = new ChessPosition(row, col);
+            if (this.getPiece(testPosition) != null) {
+                return true;
+            }
+        } catch (Exception e) {
+            return true;
+        }
+        return false;
     }
 
     /**

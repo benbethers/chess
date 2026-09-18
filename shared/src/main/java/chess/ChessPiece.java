@@ -57,6 +57,13 @@ public class ChessPiece {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
         switch (pieceType) {
             case PAWN:
+                try {
+                    if (board.getPiece(myPosition)) {
+
+                    }
+                } catch (Exception e){
+
+                }
             case ROOK:
             case KNIGHT:
             case BISHOP:
