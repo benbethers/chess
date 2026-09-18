@@ -58,17 +58,41 @@ public class ChessPiece {
         switch (pieceType) {
             case PAWN:
                 try {
-                    if (board.getPiece(myPosition)) {
-
+                    if (this.pieceColor.equals("WHITE")) {
+                        if (!board.squareOccupied(myPosition.getRow() + 1, myPosition.getColumn())) {
+                            possibleMoves.add(
+                                    new ChessMove(
+                                        myPosition,
+                                        new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn()),
+                                        null
+                                    )
+                            );
+                        }
+                    } else {
+                        if (board.squareOccupied(myPosition.getRow() - 1, myPosition.getColumn())) {
+                            possibleMoves.add(
+                                    new ChessMove(
+                                            myPosition,
+                                            new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn()),
+                                            null
+                                    )
+                            );
+                        }
                     }
                 } catch (Exception e){
-
+                    break;
                 }
+                break;
             case ROOK:
+                break;
             case KNIGHT:
+                break;
             case BISHOP:
+                break;
             case QUEEN:
+                break;
             case KING:
+                break;
         }
         return possibleMoves;
     }
