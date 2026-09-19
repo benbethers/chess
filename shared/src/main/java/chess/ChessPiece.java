@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Represents a single chess piece
@@ -299,6 +298,8 @@ public class ChessPiece {
 
     public Collection<ChessMove> findPawnMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
         int verticalProgression = 0;
 
         //Determine if pawn is moving backward or forward
@@ -307,53 +308,59 @@ public class ChessPiece {
         } else if (this.pieceColor == ChessGame.TeamColor.BLACK){
             verticalProgression = -1;
         }
+
         // Regular pawn advance
-        if (!board.squareOccupied(myPosition.getRow() + verticalProgression, myPosition.getColumn())) {
+        if (board.inBounds(row + verticalProgression, col) && !board.squareOccupied(row + verticalProgression, col)) {
             possibleMoves.add(
                 new ChessMove(
                     myPosition,
-                    new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn()),
+                    new ChessPosition(row + verticalProgression, col),
                     this.type
                 )
             );
         }
+
         // Possible pawn capture right
         if (
-            board.squareOccupied(myPosition.getRow() + verticalProgression, (myPosition.getColumn()) + 1)
-            && board.getPiece(new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() + 1)).pieceColor != this.pieceColor
+            board.inBounds(row + verticalProgression, col + 1)
+            && board.squareOccupied(row + verticalProgression, col + 1)
+            && board.getPiece(new ChessPosition(row + verticalProgression, col + 1)).pieceColor != this.pieceColor
         ) {
             possibleMoves.add(
                 new ChessMove(
                     myPosition,
-                    new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() + 1),
+                    new ChessPosition(row + verticalProgression, col + 1),
                     this.type
                 )
             );
         }
+
         // Possible pawn capture left
         if (
-            board.squareOccupied(myPosition.getRow() + verticalProgression, (myPosition.getColumn()) - 1)
-            && board.getPiece(new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() - 1)).pieceColor != this.pieceColor
+            board.inBounds(row + verticalProgression, col - 1)
+            && board.squareOccupied(row + verticalProgression, col - 1)
+            && board.getPiece(new ChessPosition(row + verticalProgression, col - 1)).pieceColor != this.pieceColor
         ) {
             possibleMoves.add(
                 new ChessMove(
                     myPosition,
-                    new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() - 1),
+                    new ChessPosition(row + verticalProgression, col - 1),
                     this.type
                 )
             );
         }
+
         //Starting double white move
         if (
             this.pieceColor == ChessGame.TeamColor.WHITE
             && myPosition.getRow() == 2
-            && !board.squareOccupied(myPosition.getRow() + 1, (myPosition.getColumn()))
-            && !board.squareOccupied(myPosition.getRow() + 2, (myPosition.getColumn()))
+            && !board.squareOccupied(row + 1, col)
+            && !board.squareOccupied(row + 2, col)
         ) {
             possibleMoves.add(
                 new ChessMove(
                     myPosition,
-                    new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn()),
+                    new ChessPosition(row + 2, col),
                     this.type
                 )
             );
@@ -362,13 +369,13 @@ public class ChessPiece {
         else if (
             this.pieceColor == ChessGame.TeamColor.BLACK
             && myPosition.getRow() == 7
-            && !board.squareOccupied(myPosition.getRow() - 1, (myPosition.getColumn()))
-            && !board.squareOccupied(myPosition.getRow() - 2, (myPosition.getColumn()))
+            && !board.squareOccupied(row - 1, col)
+            && !board.squareOccupied(row - 2, col)
         ) {
             possibleMoves.add(
                 new ChessMove(
                     myPosition,
-                    new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn()),
+                    new ChessPosition(row - 2, col),
                     this.type
                 )
             );

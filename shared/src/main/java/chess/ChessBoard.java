@@ -33,12 +33,8 @@ public class ChessBoard {
     }
 
     public boolean squareOccupied(int row, int col) {
-        try {
-            ChessPosition testPosition = new ChessPosition(row, col);
-            if (this.getPiece(testPosition) != null) {
-                return true;
-            }
-        } catch (Exception e) {
+        ChessPosition testPosition = new ChessPosition(row, col);
+        if (this.getPiece(testPosition) != null) {
             return true;
         }
         return false;
