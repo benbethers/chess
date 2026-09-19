@@ -735,4 +735,17 @@ public class ChessPiece {
 
         return possibleMoves;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof ChessPiece other) {
+            if (
+                this.pieceColor == other.getTeamColor()
+                && this.type == other.getPieceType()
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
