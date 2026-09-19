@@ -54,44 +54,22 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> possibleMoves = new ArrayList<>();
-
         switch (type) {
             case PAWN:
-                try {
-                    possibleMoves = this.findPawnMoves(board, myPosition);
-                } catch (Exception e){
-                    break;
-                }
-                break;
+                return this.findPawnMoves(board, myPosition);
             case ROOK:
-                try {
-                    possibleMoves = this.findRookMoves(board, myPosition);
-                } catch (Exception e){
-                    break;
-                }
-                break;
+                return this.findRookMoves(board, myPosition);
             case BISHOP:
-                try {
-                    possibleMoves = this.findBishopMoves(board, myPosition);
-                } catch (Exception e){
-                    break;
-                }
-                break;
+                return this.findBishopMoves(board, myPosition);
             case KNIGHT:
-                break;
+                return this.findKnightMoves(board, myPosition);
             case QUEEN:
-                try {
-                    possibleMoves = this.findQueenMoves(board, myPosition);
-                } catch (Exception e){
-                    break;
-                }
-                break;
+                return this.findQueenMoves(board, myPosition);
             case KING:
-                break;
+                return this.findKingMoves(board, myPosition);
         }
 
-        return possibleMoves;
+        return new ArrayList<>();
     }
 
     public Collection<ChessMove> findQueenMoves(ChessBoard board, ChessPosition myPosition) {
@@ -394,6 +372,358 @@ public class ChessPiece {
                     this.type
                 )
             );
+        }
+
+        return possibleMoves;
+    }
+
+    public Collection<ChessMove> findKnightMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> possibleMoves = new ArrayList<>();
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+
+        // Check left up
+        if (board.inBounds(row + 1, col - 2)) {
+            if (!board.squareOccupied(row + 1, col - 2)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 1, col - 2),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row + 1, col - 2) && board.getPiece(new ChessPosition(row + 1, col - 2)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 1, col - 2),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        // Check left down
+        if (board.inBounds(row - 1, col - 2)) {
+            if (!board.squareOccupied(row - 1, col - 2)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 1, col - 2),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row - 1, col - 2) && board.getPiece(new ChessPosition(row - 1, col - 2)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 1, col - 2),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        //Check up left
+        if (board.inBounds(row + 2, col - 1)) {
+            if (!board.squareOccupied(row + 2, col - 1)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 2, col - 1),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row + 2, col - 1) && board.getPiece(new ChessPosition(row + 2, col - 1)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 2, col - 1),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        // Check up right
+        if (board.inBounds(row + 2, col + 1)) {
+            if (!board.squareOccupied(row + 2, col + 1)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 2, col + 1),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row + 2, col + 1) && board.getPiece(new ChessPosition(row + 2, col + 1)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 2, col + 1),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        //Check right up
+        if (board.inBounds(row + 1, col + 2)) {
+            if (!board.squareOccupied(row + 1, col + 2)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 1, col + 2),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row + 1, col + 2) && board.getPiece(new ChessPosition(row + 1, col + 2)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 1, col + 2),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        // Check right down
+        if (board.inBounds(row - 1, col + 2)) {
+            if (!board.squareOccupied(row - 1, col + 2)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 1, col + 2),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row - 1, col + 2) && board.getPiece(new ChessPosition(row - 1, col + 2)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 1, col + 2),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        // Check down left
+        if (board.inBounds(row - 2, col - 1)) {
+            if (!board.squareOccupied(row - 2, col - 1)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 2, col - 1),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row - 2, col - 1) && board.getPiece(new ChessPosition(row - 2, col - 1)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 2, col - 1),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        //Check down right
+        if (board.inBounds(row - 2, col + 1)) {
+            if (!board.squareOccupied(row - 2, col + 1)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 2, col + 1),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row - 2, col + 1) && board.getPiece(new ChessPosition(row - 2, col + 1)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 2, col + 1),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        return possibleMoves;
+    }
+
+    public Collection<ChessMove> findKingMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> possibleMoves = new ArrayList<>();
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+
+        // Check upper left
+        if (board.inBounds(row + 1, col - 1)) {
+            if (!board.squareOccupied(row + 1, col - 1)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 1, col - 1),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row + 1, col - 1) && board.getPiece(new ChessPosition(row + 1, col - 1)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 1, col - 1),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        // Check upper
+        if (board.inBounds(row + 1, col)) {
+            if (!board.squareOccupied(row + 1, col)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 1, col),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row + 1, col) && board.getPiece(new ChessPosition(row + 1, col)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 1, col),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        // Check upper right
+        if (board.inBounds(row + 1, col + 1)) {
+            if (!board.squareOccupied(row + 1, col + 1)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 1, col + 1),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row + 1, col + 1) && board.getPiece(new ChessPosition(row + 1, col + 1)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + 1, col + 1),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        // Check left
+        if (board.inBounds(row, col - 1)) {
+            if (!board.squareOccupied(row, col - 1)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row, col - 1),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row, col - 1) && board.getPiece(new ChessPosition(row, col - 1)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row, col - 1),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        // Check right
+        if (board.inBounds(row, col + 1)) {
+            if (!board.squareOccupied(row, col + 1)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row, col + 1),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row, col + 1) && board.getPiece(new ChessPosition(row, col + 1)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row, col + 1),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        // Check down left
+        if (board.inBounds(row - 1, col - 1)) {
+            if (!board.squareOccupied(row - 1, col - 1)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 1, col - 1),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row - 1, col - 1) && board.getPiece(new ChessPosition(row - 1, col - 1)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 1, col - 1),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        //Check down
+        if (board.inBounds(row - 1, col)) {
+            if (!board.squareOccupied(row - 1, col)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 1, col),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row - 1, col) && board.getPiece(new ChessPosition(row - 1, col)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 1, col),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        //Check down right
+        if (board.inBounds(row - 1, col + 1)) {
+            if (!board.squareOccupied(row - 1, col + 1)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 1, col + 1),
+                                this.type
+                        )
+                );
+            } else if (board.squareOccupied(row - 1, col + 1) && board.getPiece(new ChessPosition(row - 1, col + 1)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row - 1, col + 1),
+                                this.type
+                        )
+                );
+            }
         }
 
         return possibleMoves;
