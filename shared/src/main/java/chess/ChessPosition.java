@@ -30,4 +30,19 @@ public class ChessPosition {
     public int getColumn() {
         return this.col;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof ChessPosition other) {
+            if (this.row == other.getRow() && this.col == other.getColumn()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * row + col;
+    }
 }
