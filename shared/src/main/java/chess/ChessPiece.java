@@ -81,6 +81,11 @@ public class ChessPiece {
             case KNIGHT:
                 break;
             case QUEEN:
+                try {
+                    possibleMoves = this.findQueenMoves(board, myPosition);
+                } catch (Exception e){
+                    break;
+                }
                 break;
             case KING:
                 break;
@@ -89,7 +94,15 @@ public class ChessPiece {
         return possibleMoves;
     }
 
-    public Collection<ChessMove> findBishopMoves(ChessBoard board, ChessPosition myPosition) throws Exception {
+    public Collection<ChessMove> findQueenMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> possibleMoves = new ArrayList<>();
+        possibleMoves.addAll(this.findBishopMoves(board, myPosition));
+        possibleMoves.addAll(this.findRookMoves(board, myPosition));
+
+        return possibleMoves;
+    }
+
+    public Collection<ChessMove> findBishopMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -114,6 +127,7 @@ public class ChessPiece {
                         this.type
                     )
                 );
+                break;
             } else {
                 break;
             }
@@ -139,6 +153,7 @@ public class ChessPiece {
                         this.type
                     )
                 );
+                break;
             } else {
                 break;
             }
@@ -164,6 +179,7 @@ public class ChessPiece {
                         this.type
                     )
                 );
+                break;
             } else {
                 break;
             }
@@ -189,6 +205,7 @@ public class ChessPiece {
                         this.type
                     )
                 );
+                break;
             } else {
                 break;
             }
@@ -198,7 +215,7 @@ public class ChessPiece {
         return possibleMoves;
     }
 
-    public Collection<ChessMove> findRookMoves(ChessBoard board, ChessPosition myPosition) throws Exception {
+    public Collection<ChessMove> findRookMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -221,6 +238,7 @@ public class ChessPiece {
                         this.type
                     )
                 );
+                break;
             } else {
                 break;
             }
@@ -244,6 +262,7 @@ public class ChessPiece {
                         this.type
                     )
                 );
+                break;
             } else {
                 break;
             }
@@ -267,6 +286,7 @@ public class ChessPiece {
                                 this.type
                         )
                 );
+                break;
             } else {
                 break;
             }
@@ -290,6 +310,7 @@ public class ChessPiece {
                                 this.type
                         )
                 );
+                break;
             } else {
                 break;
             }
@@ -298,7 +319,7 @@ public class ChessPiece {
         return possibleMoves;
     }
 
-    public Collection<ChessMove> findPawnMoves(ChessBoard board, ChessPosition myPosition) throws Exception {
+    public Collection<ChessMove> findPawnMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
         int verticalProgression = 0;
 
