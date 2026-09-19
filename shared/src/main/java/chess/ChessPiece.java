@@ -65,8 +65,18 @@ public class ChessPiece {
                 }
                 break;
             case ROOK:
+                try {
+                    possibleMoves = this.findRookMoves(board, myPosition);
+                } catch (Exception e){
+                    break;
+                }
                 break;
             case BISHOP:
+                try {
+                    possibleMoves = this.findBishopMoves(board, myPosition);
+                } catch (Exception e){
+                    break;
+                }
                 break;
             case KNIGHT:
                 break;
@@ -75,6 +85,116 @@ public class ChessPiece {
             case KING:
                 break;
         }
+
+        return possibleMoves;
+    }
+
+    public Collection<ChessMove> findBishopMoves(ChessBoard board, ChessPosition myPosition) throws Exception {
+        Collection<ChessMove> possibleMoves = new ArrayList<>();
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        int j;
+
+        // Check upper left squares
+        j = col - 1;
+        for (int i = row + 1; board.inBounds(i, j); i++) {
+            if (!board.squareOccupied(i, j)) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(i, j),
+                        this.type
+                    )
+                );
+            } else if (board.squareOccupied(i, j) && board.getPiece(new ChessPosition(i, j)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(i, j),
+                        this.type
+                    )
+                );
+            } else {
+                break;
+            }
+            j--;
+        }
+
+        // Check lower left squares
+        j = col - 1;
+        for (int i = row - 1; board.inBounds(i, j); i--) {
+            if (!board.squareOccupied(i, j)) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(i, j),
+                        this.type
+                    )
+                );
+            } else if (board.squareOccupied(i, j) && board.getPiece(new ChessPosition(i, j)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(i, j),
+                        this.type
+                    )
+                );
+            } else {
+                break;
+            }
+            j--;
+        }
+
+        // Check lower right squares
+        j = row - 1;
+        for (int i = col + 1; board.inBounds(j, i); i++) {
+            if (!board.squareOccupied(j, i)) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(j, i),
+                        this.type
+                    )
+                );
+            } else if (board.squareOccupied(j, i) && board.getPiece(new ChessPosition(j, i)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(j, i),
+                        this.type
+                    )
+                );
+            } else {
+                break;
+            }
+            j--;
+        }
+
+        // Check upper right squares
+        j = row + 1;
+        for (int i = col + 1; board.inBounds(j, i); i++) {
+            if (!board.squareOccupied(j, i)) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(j, i),
+                        this.type
+                    )
+                );
+            } else if (board.squareOccupied(j, i) && board.getPiece(new ChessPosition(j, i)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(j, i),
+                        this.type
+                    )
+                );
+            } else {
+                break;
+            }
+            j++;
+        }
+
         return possibleMoves;
     }
 
@@ -85,7 +205,7 @@ public class ChessPiece {
 
         // Check upper squares
         for (int i = row + 1; board.inBounds(i, col); i++) {
-            if (board.squareOccupied(i, col)) {
+            if (!board.squareOccupied(i, col)) {
                 possibleMoves.add(
                     new ChessMove(
                         myPosition,
@@ -93,12 +213,22 @@ public class ChessPiece {
                         this.type
                     )
                 );
+            } else if (board.squareOccupied(i, col) && board.getPiece(new ChessPosition(i, col)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(i, col),
+                        this.type
+                    )
+                );
+            } else {
+                break;
             }
         }
 
         // Check lower squares
-        for (int i = row - 1; board.inBounds(row, i); i--) {
-            if (board.squareOccupied(i, col)) {
+        for (int i = row - 1; board.inBounds(i, col); i--) {
+            if (!board.squareOccupied(i, col)) {
                 possibleMoves.add(
                     new ChessMove(
                         myPosition,
@@ -106,12 +236,30 @@ public class ChessPiece {
                         this.type
                     )
                 );
+            } else if (board.squareOccupied(i, col) && board.getPiece(new ChessPosition(i, col)).pieceColor != pieceColor) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(i, col),
+                        this.type
+                    )
+                );
+            } else {
+                break;
             }
         }
 
         // Check left squares
         for (int i = col - 1; board.inBounds(row, i); i--) {
-            if (board.squareOccupied(row, i)) {
+            if (!board.squareOccupied(row, i)) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(row, i),
+                        this.type
+                    )
+                );
+            } else if (board.squareOccupied(row, i) && board.getPiece(new ChessPosition(row, i)).pieceColor != pieceColor) {
                 possibleMoves.add(
                         new ChessMove(
                                 myPosition,
@@ -119,12 +267,22 @@ public class ChessPiece {
                                 this.type
                         )
                 );
+            } else {
+                break;
             }
         }
 
         // Check right squares
         for (int i = col + 1; board.inBounds(row, i); i++) {
-            if (board.squareOccupied(row, i)) {
+            if (!board.squareOccupied(row, i)) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(row, i),
+                        this.type
+                    )
+                );
+            } else if (board.squareOccupied(row, i) && board.getPiece(new ChessPosition(row, i)).pieceColor != pieceColor) {
                 possibleMoves.add(
                         new ChessMove(
                                 myPosition,
@@ -132,9 +290,10 @@ public class ChessPiece {
                                 this.type
                         )
                 );
+            } else {
+                break;
             }
         }
-
 
         return possibleMoves;
     }
