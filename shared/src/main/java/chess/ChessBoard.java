@@ -32,11 +32,7 @@ public class ChessBoard {
         return squares[position.getRow()-1][position.getColumn()-1];
     }
 
-    public boolean squareOccupied(int row, int col) throws Exception {
-        if ((row > 8 || row < 1) || (col > 8 || col < 1)) {
-            throw new Exception("Position out of bounds");
-        }
-
+    public boolean squareOccupied(int row, int col) {
         try {
             ChessPosition testPosition = new ChessPosition(row, col);
             if (this.getPiece(testPosition) != null) {
@@ -46,6 +42,13 @@ public class ChessBoard {
             return true;
         }
         return false;
+    }
+
+    public boolean inBounds(int row, int col) {
+        if (row > 8 || row < 1 || col > 8 || col < 1) {
+            return false;
+        }
+        return true;
     }
 
     /**

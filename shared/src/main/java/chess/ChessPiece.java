@@ -55,74 +55,11 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
-        int verticalProgression = 0;
-        int horizonalProgression = 0;
 
         switch (type) {
             case PAWN:
                 try {
-                    if (this.pieceColor == ChessGame.TeamColor.WHITE) {
-                        verticalProgression = 1;
-                    } else if (this.pieceColor == ChessGame.TeamColor.BLACK){
-                        verticalProgression = -1;
-                    }
-                    // Regular pawn advance
-                    if (!board.squareOccupied(myPosition.getRow() + verticalProgression, myPosition.getColumn())) {
-                        possibleMoves.add(
-                                new ChessMove(
-                                        myPosition,
-                                        new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn()),
-                                        this.type
-                                )
-                        );
-                    }
-                    // Possible pawn capture right
-                    if (board.squareOccupied(myPosition.getRow() + verticalProgression, myPosition.getColumn() + 1)) {
-                        possibleMoves.add(
-                                new ChessMove(
-                                        myPosition,
-                                        new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() + 1),
-                                        this.type
-                                )
-                        );
-                    }
-                    // Possible pawn capture left
-                    if (board.squareOccupied(myPosition.getRow() + verticalProgression, (myPosition.getColumn()) - 1)) {
-                        possibleMoves.add(
-                                new ChessMove(
-                                        myPosition,
-                                        new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() - 1),
-                                        this.type
-                                )
-                        );
-                    }
-                    if (
-                            this.pieceColor == ChessGame.TeamColor.WHITE
-                            && myPosition.getRow() == 2
-                            && !board.squareOccupied(myPosition.getRow() + 1, (myPosition.getColumn()))
-                            && !board.squareOccupied(myPosition.getRow() + 2, (myPosition.getColumn()))
-                    ) {
-                        possibleMoves.add(
-                                new ChessMove(
-                                        myPosition,
-                                        new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn()),
-                                        this.type
-                                )
-                        );
-                    } else if (
-                            this.pieceColor == ChessGame.TeamColor.BLACK
-                            && myPosition.getRow() == 7
-                            && !board.squareOccupied(myPosition.getRow() - 1, (myPosition.getColumn()))
-                            && !board.squareOccupied(myPosition.getRow() - 2, (myPosition.getColumn()))
-                    ) {
-                        possibleMoves.add(
-                                new ChessMove(
-                                        myPosition,
-                                        new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn()),
-                                        this.type
-                                )
-                        );
-                    }
+                    possibleMoves = this.findPawnMoves(board, myPosition);
                 } catch (Exception e){
                     break;
                 }
@@ -138,6 +75,147 @@ public class ChessPiece {
             case KING:
                 break;
         }
+        return possibleMoves;
+    }
+
+    public Collection<ChessMove> findRookMoves(ChessBoard board, ChessPosition myPosition) throws Exception {
+        Collection<ChessMove> possibleMoves = new ArrayList<>();
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+
+        // Check upper squares
+        for (int i = row + 1; board.inBounds(i, col); i++) {
+            if (board.squareOccupied(i, col)) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(i, col),
+                        this.type
+                    )
+                );
+            }
+        }
+
+        // Check lower squares
+        for (int i = row - 1; board.inBounds(row, i); i--) {
+            if (board.squareOccupied(i, col)) {
+                possibleMoves.add(
+                    new ChessMove(
+                        myPosition,
+                        new ChessPosition(i, col),
+                        this.type
+                    )
+                );
+            }
+        }
+
+        // Check left squares
+        for (int i = col - 1; board.inBounds(row, i); i--) {
+            if (board.squareOccupied(row, i)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row, i),
+                                this.type
+                        )
+                );
+            }
+        }
+
+        // Check right squares
+        for (int i = col + 1; board.inBounds(row, i); i++) {
+            if (board.squareOccupied(row, i)) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row, i),
+                                this.type
+                        )
+                );
+            }
+        }
+
+
+        return possibleMoves;
+    }
+
+    public Collection<ChessMove> findPawnMoves(ChessBoard board, ChessPosition myPosition) throws Exception {
+        Collection<ChessMove> possibleMoves = new ArrayList<>();
+        int verticalProgression = 0;
+
+        //Determine if pawn is moving backward or forward
+        if (this.pieceColor == ChessGame.TeamColor.WHITE) {
+            verticalProgression = 1;
+        } else if (this.pieceColor == ChessGame.TeamColor.BLACK){
+            verticalProgression = -1;
+        }
+        // Regular pawn advance
+        if (!board.squareOccupied(myPosition.getRow() + verticalProgression, myPosition.getColumn())) {
+            possibleMoves.add(
+                new ChessMove(
+                    myPosition,
+                    new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn()),
+                    this.type
+                )
+            );
+        }
+        // Possible pawn capture right
+        if (
+            board.squareOccupied(myPosition.getRow() + verticalProgression, (myPosition.getColumn()) + 1)
+            && board.getPiece(new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() + 1)).pieceColor != this.pieceColor
+        ) {
+            possibleMoves.add(
+                new ChessMove(
+                    myPosition,
+                    new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() + 1),
+                    this.type
+                )
+            );
+        }
+        // Possible pawn capture left
+        if (
+            board.squareOccupied(myPosition.getRow() + verticalProgression, (myPosition.getColumn()) - 1)
+            && board.getPiece(new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() - 1)).pieceColor != this.pieceColor
+        ) {
+            possibleMoves.add(
+                new ChessMove(
+                    myPosition,
+                    new ChessPosition(myPosition.getRow() + verticalProgression, myPosition.getColumn() - 1),
+                    this.type
+                )
+            );
+        }
+        //Starting double white move
+        if (
+            this.pieceColor == ChessGame.TeamColor.WHITE
+            && myPosition.getRow() == 2
+            && !board.squareOccupied(myPosition.getRow() + 1, (myPosition.getColumn()))
+            && !board.squareOccupied(myPosition.getRow() + 2, (myPosition.getColumn()))
+        ) {
+            possibleMoves.add(
+                new ChessMove(
+                    myPosition,
+                    new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn()),
+                    this.type
+                )
+            );
+        }
+        // Starting double black move
+        else if (
+            this.pieceColor == ChessGame.TeamColor.BLACK
+            && myPosition.getRow() == 7
+            && !board.squareOccupied(myPosition.getRow() - 1, (myPosition.getColumn()))
+            && !board.squareOccupied(myPosition.getRow() - 2, (myPosition.getColumn()))
+        ) {
+            possibleMoves.add(
+                new ChessMove(
+                    myPosition,
+                    new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn()),
+                    this.type
+                )
+            );
+        }
+
         return possibleMoves;
     }
 }
