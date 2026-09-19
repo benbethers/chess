@@ -54,4 +54,9 @@ public class ChessMove {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return 31 * startPosition.hashCode() + endPosition.hashCode() + promotionPiece.hashCode();
+    }
 }

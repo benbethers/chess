@@ -748,4 +748,9 @@ public class ChessPiece {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return 31 * pieceColor.hashCode() + type.hashCode();
+    }
 }
