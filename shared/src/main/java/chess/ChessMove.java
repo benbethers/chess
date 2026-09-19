@@ -46,8 +46,8 @@ public class ChessMove {
         if (object instanceof ChessMove other) {
             if (
                     this.promotionPiece == other.getPromotionPiece()
-                    && this.startPosition == other.getStartPosition()
-                    && this.endPosition == other.getEndPosition()
+                    && this.startPosition.equals(other.getStartPosition())
+                    && this.endPosition.equals(other.getEndPosition())
             ) {
                 return true;
             }
