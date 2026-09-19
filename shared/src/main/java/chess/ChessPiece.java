@@ -311,13 +311,44 @@ public class ChessPiece {
 
         // Regular pawn advance
         if (board.inBounds(row + verticalProgression, col) && !board.squareOccupied(row + verticalProgression, col)) {
-            possibleMoves.add(
-                new ChessMove(
-                    myPosition,
-                    new ChessPosition(row + verticalProgression, col),
-                    null
-                )
-            );
+            if (row + verticalProgression == 1 || row + verticalProgression == 8) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col),
+                                PieceType.BISHOP
+                        )
+                );
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col),
+                                PieceType.QUEEN
+                        )
+                );
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col),
+                                PieceType.ROOK
+                        )
+                );
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col),
+                                PieceType.KNIGHT
+                        )
+                );
+            } else {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col),
+                                null
+                        )
+                );
+            }
         }
 
         // Possible pawn capture right
@@ -326,13 +357,44 @@ public class ChessPiece {
             && board.squareOccupied(row + verticalProgression, col + 1)
             && board.getPiece(new ChessPosition(row + verticalProgression, col + 1)).pieceColor != this.pieceColor
         ) {
-            possibleMoves.add(
-                new ChessMove(
-                    myPosition,
-                    new ChessPosition(row + verticalProgression, col + 1),
-                    null
-                )
-            );
+            if (row + verticalProgression == 1 || row+ verticalProgression == 8) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col + 1),
+                                PieceType.BISHOP
+                        )
+                );
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col + 1),
+                                PieceType.QUEEN
+                        )
+                );
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col + 1),
+                                PieceType.ROOK
+                        )
+                );
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col + 1),
+                                PieceType.KNIGHT
+                        )
+                );
+            } else {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col + 1),
+                                null
+                        )
+                );
+            }
         }
 
         // Possible pawn capture left
@@ -341,13 +403,44 @@ public class ChessPiece {
             && board.squareOccupied(row + verticalProgression, col - 1)
             && board.getPiece(new ChessPosition(row + verticalProgression, col - 1)).pieceColor != this.pieceColor
         ) {
-            possibleMoves.add(
-                new ChessMove(
-                    myPosition,
-                    new ChessPosition(row + verticalProgression, col - 1),
-                    null
-                )
-            );
+            if (row + verticalProgression == 1 || row + verticalProgression == 8) {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col - 1),
+                                PieceType.BISHOP
+                        )
+                );
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col - 1),
+                                PieceType.QUEEN
+                        )
+                );
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col - 1),
+                                PieceType.ROOK
+                        )
+                );
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col - 1),
+                                PieceType.KNIGHT
+                        )
+                );
+            } else {
+                possibleMoves.add(
+                        new ChessMove(
+                                myPosition,
+                                new ChessPosition(row + verticalProgression, col - 1),
+                                null
+                        )
+                );
+            }
         }
 
         //Starting double white move
@@ -365,6 +458,7 @@ public class ChessPiece {
                 )
             );
         }
+
         // Starting double black move
         else if (
             this.pieceColor == ChessGame.TeamColor.BLACK
