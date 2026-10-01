@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -50,7 +51,48 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        // Get piece in question
+        ChessPiece piece = board.getPiece(startPosition);
+
+        if (piece == null) {
+            return null;
+        }
+
+        // Retrieve all a list of all moves and a basic list to add all valid moves
+        Collection<ChessMove> moves = piece.pieceMoves(board, startPosition);
+        Collection<ChessMove> validMoves = new ArrayList<>();
+
+        // For each move
+        for (ChessMove move : moves) {
+            ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+
+            // Temporary move
+            board.removePiece(move.getStartPosition());
+            board.removePiece(move.getEndPosition());
+            // If move includes a piece promotion, make that promotion as a test, otherwise make the normal test move
+            if (move.getPromotionPiece() != null) {
+                board.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+            } else {
+                board.addPiece(move.getEndPosition(), piece);
+            }
+
+            // Take isolated variable for whether the king is still in check
+            boolean inCheck = isInCheck(piece.getTeamColor());
+
+            // Undo temporary move
+            board.removePiece(move.getEndPosition());
+            board.addPiece(move.getStartPosition(), piece);
+
+            if (capturedPiece != null) {
+                board.addPiece(move.getEndPosition(), capturedPiece);
+            }
+
+            if (!inCheck) {
+                validMoves.add(move);
+            }
+        }
+        return validMoves;
+        // return board.getPiece(startPosition).pieceMoves(board, startPosition);
     }
 
     /**
