@@ -156,6 +156,21 @@ public class ChessGame {
         }
     }
 
+    // Find the position of the king of a team
+    public ChessPosition findKing(TeamColor teamColor) {
+        // Check every piece to see if it is the team color's king
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                if (board.getPiece(new ChessPosition(i, j)) != null) {
+                    if (board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor && board.getPiece(new ChessPosition(i, j)).getPieceType() == ChessPiece.PieceType.KING) {
+                        return new ChessPosition(i, j);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Determines if the given team is in check
      *
