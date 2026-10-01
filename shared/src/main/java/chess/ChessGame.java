@@ -96,6 +96,27 @@ public class ChessGame {
     }
 
     /**
+     * Gets all valid moves for a selected team
+     *
+     * @param teamColor The team color to return the moves of
+     * @return Set of valid moves for all pieces of the selected team
+     */
+    public Collection<ChessMove> validTeamMoves(TeamColor teamColor) {
+        Collection validTeamMoves = new ArrayList<>();
+        // For every piece find all valid moves that team can make
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                if (board.getPiece(new ChessPosition(i, j)) != null) {
+                    if (board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor) {
+                        validTeamMoves.addAll(this.validMoves(new ChessPosition(i, j)));
+                    }
+                }
+            }
+        }
+        return validTeamMoves;
+    }
+
+    /**
      * Makes a move in the chess game
      *
      * @param move chess move to perform
