@@ -178,7 +178,35 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // Find the opposing team
+        TeamColor opposingTeam;
+        if (teamColor == TeamColor.BLACK) {
+            opposingTeam = TeamColor.WHITE;
+        } else {
+            opposingTeam = TeamColor.BLACK;
+        }
+
+        // Store king position
+        ChessPosition kingPosition = this.findKing(teamColor);
+
+        // For each piece
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                // Store piece and position
+                ChessPosition position = new ChessPosition(i, j);
+                ChessPiece piece = board.getPiece(position);
+
+                // Check every move to see if it includes something that puts the king under direct danger
+                if (piece != null && piece.getTeamColor() == opposingTeam) {
+                    for (ChessMove move : piece.pieceMoves(board, position)) {
+                        if (move.getEndPosition().equals(kingPosition)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
