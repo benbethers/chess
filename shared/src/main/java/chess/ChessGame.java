@@ -279,4 +279,17 @@ public class ChessGame {
     public ChessBoard getBoard() {
         return board;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof ChessGame other) {
+            return (this.board.equals(other.getBoard()) && this.currentTurn == other.getTeamTurn());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * this.board.hashCode() + this.currentTurn.hashCode();
+    }
 }
