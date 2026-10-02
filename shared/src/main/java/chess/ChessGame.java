@@ -216,7 +216,39 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // Return false if not in check
+        if (!this.isInCheck(teamColor)) {
+            return false;
+        }
+
+        // Check the effects of every move and see if it removes the king from check
+        for (ChessMove move : this.validTeamMoves(teamColor)) {
+            ChessPiece movingPiece = board.getPiece(move.getStartPosition());
+            ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+
+            // Temporarily make move
+            board.removePiece(move.getStartPosition());
+            board.removePiece(move.getEndPosition());
+            board.addPiece(move.getEndPosition(), movingPiece);
+
+            boolean stillInCheck = this.isInCheck(teamColor);
+
+            // Undo temporary move
+            board.removePiece(move.getEndPosition());
+            board.addPiece(move.getStartPosition(), movingPiece);
+
+            // Add captured piece back if it exists
+            if (capturedPiece != null) {
+                board.addPiece(move.getEndPosition(), capturedPiece);
+            }
+
+            // This move saves the king
+            if (!stillInCheck) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
