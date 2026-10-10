@@ -27,4 +27,22 @@ public class MemoryGameDAO implements GameDAO {
         games.put(gameID, game);
         return gameID;
     }
+
+    // Retrieve game from games hashmap
+    @Override
+    public GameData getGame(int gameID) throws DataAccessException {
+        return games.get(gameID);
+    }
+
+    // Update game with new game object
+    @Override
+    public void updateGame(GameData game) throws DataAccessException {
+        // Check if game exists before trying to update it
+        if (!games.containsKey(game.gameID())) {
+            throw new DataAccessException("Game does not exist");
+        }
+
+        // Replace old game with updated game object
+        games.put(game.gameID(), game);
+    }
 }
