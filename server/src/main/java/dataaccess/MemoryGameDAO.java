@@ -34,6 +34,11 @@ public class MemoryGameDAO implements GameDAO {
         return games.get(gameID);
     }
 
+    @Override
+    public Collection<GameData> listGames() throws DataAccessException {
+        return new ArrayList<>(games.values());
+    }
+
     // Update game with new game object
     @Override
     public void updateGame(GameData game) throws DataAccessException {
@@ -45,4 +50,6 @@ public class MemoryGameDAO implements GameDAO {
         // Replace old game with updated game object
         games.put(game.gameID(), game);
     }
+
+
 }
