@@ -34,6 +34,7 @@ public class MemoryGameDAO implements GameDAO {
         return games.get(gameID);
     }
 
+    // Return a list of all games
     @Override
     public Collection<GameData> listGames() throws DataAccessException {
         return new ArrayList<>(games.values());
