@@ -24,4 +24,10 @@ public class MemoryUserDAO implements UserDAO {
     public UserData getUser(String username) throws DataAccessException {
         return users.get(username);
     }
+
+    // Clear all users
+    @Override
+    public void clear() throws DataAccessException {
+        users.clear();
+    }
 }

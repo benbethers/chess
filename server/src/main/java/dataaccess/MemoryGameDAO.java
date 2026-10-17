@@ -51,4 +51,11 @@ public class MemoryGameDAO implements GameDAO {
         // Replace old game with updated game object
         games.put(game.gameID(), game);
     }
+
+    // Clear game list and reset gameIDs counter
+    @Override
+    public void clear() throws DataAccessException {
+        games.clear();
+        nextGameID = 1;
+    }
 }
