@@ -146,6 +146,119 @@ public class Server {
                 }
             }
         });
+
+        // List games (GET /game)
+        javalin.get("/game", ctx -> {
+            try {
+                String authToken = ctx.header("Authorization");
+                Collection<GameData> games =
+                        gameService.listGames(authToken);
+
+                var gameList = games.stream()
+                        .map(game -> new GameListItem(
+                                game.gameID(),
+                                game.whiteUsername(),
+                                game.blackUsername(),
+                                game.gameName()
+                        ))
+                        .toList();
+
+                sendJson(ctx, 200, Map.of("games", gameList));
+
+            } catch (DataAccessException e) {
+                String message = e.getMessage();
+
+                if (message != null &&
+                        (message.toLowerCase().contains("token") ||
+                                message.toLowerCase().contains("authorization"))) {
+                    sendError(ctx, 401, message);
+                } else {
+                    sendError(ctx, 500, message);
+                }
+            }
+        });
+
+        // Create a game (POST /game)
+        javalin.post("/game", ctx -> {
+            try {
+                CreateGameRequest request =
+                        gson.fromJson(ctx.body(), CreateGameRequest.class);
+
+                if (request == null) {
+                    sendError(ctx, 400, "Missing request body");
+                    return;
+                }
+
+                String authToken = ctx.header("Authorization");
+                int gameID = gameService.createGame(
+                        authToken,
+                        request.gameName()
+                );
+
+                sendJson(ctx, 200, Map.of("gameID", gameID));
+
+            } catch (JsonSyntaxException e) {
+                sendError(ctx, 400, "Invalid JSON");
+            } catch (DataAccessException e) {
+                String message = e.getMessage();
+
+                if (message != null &&
+                        message.toLowerCase().contains("game name")) {
+                    sendError(ctx, 400, message);
+                } else if (message != null &&
+                        (message.toLowerCase().contains("token") ||
+                                message.toLowerCase().contains("authorization"))) {
+                    sendError(ctx, 401, message);
+                } else {
+                    sendError(ctx, 500, message);
+                }
+            }
+        });
+
+        // Join a game (PUT /game)
+        javalin.put("/game", ctx -> {
+            try {
+                JoinGameRequest request =
+                        gson.fromJson(ctx.body(), JoinGameRequest.class);
+
+                if (request == null) {
+                    sendError(ctx, 400, "Missing request body");
+                    return;
+                }
+
+                String authToken = ctx.header("Authorization");
+
+                gameService.joinGame(
+                        authToken,
+                        request.gameID(),
+                        request.playerColor()
+                );
+
+                sendJson(ctx, 200, Map.of());
+
+            } catch (JsonSyntaxException e) {
+                sendError(ctx, 400, "Invalid JSON");
+            } catch (DataAccessException e) {
+                String message = e.getMessage();
+                String lowerMessage = message == null
+                        ? ""
+                        : message.toLowerCase();
+
+                if (lowerMessage.contains("token") ||
+                        lowerMessage.contains("authorization")) {
+                    sendError(ctx, 401, message);
+                } else if (lowerMessage.contains("occupied") ||
+                        lowerMessage.contains("already taken")) {
+                    sendError(ctx, 403, message);
+                } else if (lowerMessage.contains("game") ||
+                        lowerMessage.contains("color") ||
+                        lowerMessage.contains("player")) {
+                    sendError(ctx, 400, message);
+                } else {
+                    sendError(ctx, 500, message);
+                }
+            }
+        });
     }
 
     public int run(int desiredPort) {
