@@ -8,10 +8,12 @@ import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import io.javalin.Javalin;
 import model.AuthData;
+import model.GameData;
 import service.ClearService;
 import service.GameService;
 import service.UserService;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class Server {
@@ -38,7 +40,7 @@ public class Server {
         userService = new UserService(userDAO, authDAO);
         gameService = new GameService(gameDAO, authDAO);
 
-        // Clear all data (/db)
+        // Clear all data (DELETE /db)
         javalin.delete("/db", ctx -> {
             try {
                 clearService.clear();
@@ -48,7 +50,7 @@ public class Server {
             }
         });
 
-        // Register a new user (/user)
+        // Register a new user (POST /user)
         javalin.post("/user", ctx -> {
             try {
                 RegisterRequest request =
@@ -81,6 +83,64 @@ public class Server {
                 } else if (message != null &&
                         message.toLowerCase().contains("missing")) {
                     sendError(ctx, 400, message);
+                } else {
+                    sendError(ctx, 500, message);
+                }
+            }
+        });
+
+        // Log in (POST /session)
+        javalin.post("/session", ctx -> {
+            try {
+                LoginRequest request =
+                        gson.fromJson(ctx.body(), LoginRequest.class);
+
+                if (request == null) {
+                    sendError(ctx, 400, "Missing request body");
+                    return;
+                }
+
+                AuthData auth = userService.login(
+                        request.username(),
+                        request.password()
+                );
+
+                sendJson(ctx, 200, Map.of(
+                        "username", auth.username(),
+                        "authToken", auth.authToken()
+                ));
+
+            } catch (JsonSyntaxException e) {
+                sendError(ctx, 400, "Invalid JSON");
+            } catch (DataAccessException e) {
+                String message = e.getMessage();
+
+                if (message != null &&
+                        message.toLowerCase().contains("missing")) {
+                    sendError(ctx, 400, message);
+                } else if (message != null &&
+                        message.toLowerCase().contains("incorrect")) {
+                    sendError(ctx, 401, message);
+                } else {
+                    sendError(ctx, 500, message);
+                }
+            }
+        });
+
+        // Log out (DELETE /session)
+        javalin.delete("/session", ctx -> {
+            try {
+                String authToken = ctx.header("Authorization");
+                userService.logout(authToken);
+                sendJson(ctx, 200, Map.of());
+
+            } catch (DataAccessException e) {
+                String message = e.getMessage();
+
+                if (message != null &&
+                        (message.toLowerCase().contains("token") ||
+                                message.toLowerCase().contains("authorization"))) {
+                    sendError(ctx, 401, message);
                 } else {
                     sendError(ctx, 500, message);
                 }
@@ -122,5 +182,26 @@ public class Server {
             String username,
             String password,
             String email
+    ) {}
+
+    private record LoginRequest(
+            String username,
+            String password
+    ) {}
+
+    private record CreateGameRequest(
+            String gameName
+    ) {}
+
+    private record JoinGameRequest(
+            int gameID,
+            String playerColor
+    ) {}
+
+    private record GameListItem(
+            int gameID,
+            String whiteUsername,
+            String blackUsername,
+            String gameName
     ) {}
 }
