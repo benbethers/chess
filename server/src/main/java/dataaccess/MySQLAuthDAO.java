@@ -51,12 +51,24 @@ public class MySQLAuthDAO implements AuthDAO {
     // Remove authentication token from the authTokens hashmap
     @Override
     public void deleteAuth(String authToken) throws DataAccessException {
-        if (!authTokens.containsKey(authToken)) {
-            throw new DataAccessException("Authentication token does not exist");
-        }
+        String sql = "DELETE FROM auth WHERE authToken = ?";
 
-        authTokens.remove(authToken);
+        try (var conn = DatabaseManager.getConnection();
+             var statement = conn.prepareStatement(sql)) {
+
+            statement.setString(1, authToken);
+
+            int rowsDeleted = statement.executeUpdate();
+
+            if (rowsDeleted == 0) {
+                throw new DataAccessException("Authentication token does not exist");
+            }
+
+        } catch (SQLException ex) {
+            throw new DataAccessException("Unable to delete authentication token", ex);
+        }
     }
+
 
     // Clear all auth tokens
     @Override
