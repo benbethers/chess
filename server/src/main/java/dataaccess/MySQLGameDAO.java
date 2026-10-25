@@ -2,27 +2,46 @@ package dataaccess;
 
 import model.GameData;
 import chess.ChessGame;
+import com.google.gson.Gson;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class MySQLGameDAO implements GameDAO {
-    private int nextGameID = 1;
+    private final Gson gson = new Gson();
 
     @Override
     public int createGame(String gameName) throws DataAccessException {
-        int gameID = nextGameID++;
+        String sql = """
+                INSERT INTO games (whiteUsername, blackUsername, gameName, game)
+                VALUES (?, ?, ?, ?)
+                """;
 
-        GameData game = new GameData(
-                gameID,
-                null,
-                null,
-                gameName,
-                new ChessGame()
-        );
+        ChessGame chessGame = new ChessGame();
+        String gameJson = gson.toJson(chessGame);
 
-        games.put(gameID, game);
-        return gameID;
+        try (var conn = DatabaseManager.getConnection();
+             var statement = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setNull(1, java.sql.Types.VARCHAR);
+            statement.setNull(2, java.sql.Types.VARCHAR);
+            statement.setString(3, gameName);
+            statement.setString(4, gameJson);
+
+            statement.executeUpdate();
+
+            try (var keys = statement.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return keys.getInt(1);
+                }
+            }
+
+            throw new DataAccessException("Unable to create game");
+
+        } catch (SQLException ex) {
+            throw new DataAccessException("Unable to create game", ex);
+        }
     }
 
     // Retrieve game from games hashmap
