@@ -73,6 +73,15 @@ public class MySQLAuthDAO implements AuthDAO {
     // Clear all auth tokens
     @Override
     public void clear() throws DataAccessException {
-        authTokens.clear();
+        String sql = "DELETE FROM auth";
+
+        try (var conn = DatabaseManager.getConnection();
+             var statement = conn.prepareStatement(sql)) {
+
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            throw new DataAccessException("Unable to clear authentication tokens", ex);
+        }
     }
 }
