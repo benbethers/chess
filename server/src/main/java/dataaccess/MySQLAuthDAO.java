@@ -2,10 +2,24 @@ package dataaccess;
 
 import model.AuthData;
 
+import java.sql.SQLException;
+
 public class MySQLAuthDAO implements AuthDAO {
     @Override
     public void createAuth(AuthData auth) throws DataAccessException {
-        authTokens.put(auth.authToken(), auth);
+        String sql = "INSERT INTO auth (authToken, username) VALUES (?, ?)";
+
+        try (var conn = DatabaseManager.getConnection();
+             var statement = conn.prepareStatement(sql)) {
+
+            statement.setString(1, auth.authToken());
+            statement.setString(2, auth.username());
+
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            throw new DataAccessException("Unable to create authentication token", ex);
+        }
     }
 
     // Return authToken from authTokens list;
