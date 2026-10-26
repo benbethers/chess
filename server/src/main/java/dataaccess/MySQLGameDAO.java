@@ -104,13 +104,30 @@ public class MySQLGameDAO implements GameDAO {
     // Update game with new game object
     @Override
     public void updateGame(GameData game) throws DataAccessException {
-        // Check if game exists before trying to update it
-        if (!games.containsKey(game.gameID())) {
-            throw new DataAccessException("Game does not exist");
-        }
+        String sql = """
+                UPDATE games
+                SET whiteUsername = ?, blackUsername = ?, gameName = ?, game = ?
+                WHERE gameID = ?
+                """;
 
-        // Replace old game with updated game object
-        games.put(game.gameID(), game);
+        try (var conn = DatabaseManager.getConnection();
+             var statement = conn.prepareStatement(sql)) {
+
+            statement.setString(1, game.whiteUsername());
+            statement.setString(2, game.blackUsername());
+            statement.setString(3, game.gameName());
+            statement.setString(4, gson.toJson(game.game()));
+            statement.setInt(5, game.gameID());
+
+            int rowsUpdated = statement.executeUpdate();
+
+            if (rowsUpdated == 0) {
+                throw new DataAccessException("Game does not exist");
+            }
+
+        } catch (SQLException ex) {
+            throw new DataAccessException("Unable to update game", ex);
+        }
     }
 
     // Clear game list and reset gameIDs counter
