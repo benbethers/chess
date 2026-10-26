@@ -133,7 +133,15 @@ public class MySQLGameDAO implements GameDAO {
     // Clear game list and reset gameIDs counter
     @Override
     public void clear() throws DataAccessException {
-        games.clear();
-        nextGameID = 1;
+        String sql = "DELETE FROM games";
+
+        try (var conn = DatabaseManager.getConnection();
+             var statement = conn.prepareStatement(sql)) {
+
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            throw new DataAccessException("Unable to clear games", ex);
+        }
     }
 }
