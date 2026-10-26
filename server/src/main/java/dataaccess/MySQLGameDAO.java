@@ -44,10 +44,33 @@ public class MySQLGameDAO implements GameDAO {
         }
     }
 
-    // Retrieve game from games hashmap
+    // Retrieve game from MySQL database
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
-        return games.get(gameID);
+        String sql = "SELECT * FROM games WHERE gameID = ?";
+
+        try (var conn = DatabaseManager.getConnection();
+             var statement = conn.prepareStatement(sql)) {
+
+            statement.setInt(1, gameID);
+
+            try (var result = statement.executeQuery()) {
+                if (result.next()) {
+                    return new GameData(
+                            result.getInt("gameID"),
+                            result.getString("whiteUsername"),
+                            result.getString("blackUsername"),
+                            result.getString("gameName"),
+                            gson.fromJson(result.getString("game"), ChessGame.class)
+                    );
+                }
+            }
+
+            return null;
+
+        } catch (SQLException ex) {
+            throw new DataAccessException("Unable to get game", ex);
+        }
     }
 
     // Return a list of all games
