@@ -56,6 +56,15 @@ public class MySQLUserDAO implements UserDAO {
     // Clear all users
     @Override
     public void clear() throws DataAccessException {
-        users.clear();
+        String sql = "DELETE FROM users";
+
+        try (var conn = DatabaseManager.getConnection();
+             var statement = conn.prepareStatement(sql)) {
+
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            throw new DataAccessException("Unable to clear users", ex);
+        }
     }
 }
