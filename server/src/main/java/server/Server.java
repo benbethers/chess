@@ -2,10 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import io.javalin.Javalin;
 import model.AuthData;
 import model.GameData;
@@ -31,9 +28,9 @@ public class Server {
         );
 
         // Create data access objects
-        var userDAO = new MemoryUserDAO();
-        var gameDAO = new MemoryGameDAO();
-        var authDAO = new MemoryAuthDAO();
+        var userDAO = new MySQLUserDAO();
+        var gameDAO = new MySQLGameDAO();
+        var authDAO = new MySQLAuthDAO();
 
         // Initialize services
         clearService = new ClearService(userDAO, gameDAO, authDAO);
@@ -262,6 +259,13 @@ public class Server {
     }
 
     public int run(int desiredPort) {
+        try {
+            DatabaseManager.createDatabase();
+            DatabaseManager.createTables();
+        } catch (DataAccessException ex) {
+            throw new RuntimeException("Could not initialize database", ex);
+        }
+
         javalin.start(desiredPort);
         return javalin.port();
     }
