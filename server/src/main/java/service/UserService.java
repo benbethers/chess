@@ -7,6 +7,7 @@ import model.AuthData;
 import model.UserData;
 
 import java.util.UUID;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService {
     private final UserDAO userDAO;
@@ -31,8 +32,11 @@ public class UserService {
             throw new DataAccessException("Username is already taken");
         }
 
-        // Create and add new user to users list
-        UserData user = new UserData(username, password, email);
+        // Hash the password
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        // Create and add new user
+        UserData user = new UserData(username, hashedPassword, email);
         userDAO.createUser(user);
 
         // Generate and store an authentication token
@@ -53,7 +57,7 @@ public class UserService {
         UserData user = userDAO.getUser(username);
 
         // Verify that user exists and that the password is correct
-        if (user == null || !user.password().equals(password)) {
+        if (user == null || !BCrypt.checkpw(password, user.password())) {
             throw new DataAccessException("Incorrect username or password");
         }
 
