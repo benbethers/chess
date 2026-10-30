@@ -10,6 +10,7 @@ public class MySQLAuthDAOTest {
 
     private MySQLAuthDAO authDAO;
 
+    // Set up tester database before every test
     @BeforeEach
     void setUp() throws DataAccessException {
         DatabaseManager.createDatabase();
@@ -19,6 +20,7 @@ public class MySQLAuthDAOTest {
         authDAO.clear();
     }
 
+    // Test making an auth token and getting it
     @Test
     void createAndGetAuth() throws DataAccessException {
         AuthData auth = new AuthData("token123", "user1");
@@ -28,11 +30,13 @@ public class MySQLAuthDAOTest {
         assertEquals(auth, authDAO.getAuth("token123"));
     }
 
+    // Test attempting to retrieve an auth token that does not exist
     @Test
     void getNonexistentAuth() throws DataAccessException {
         assertNull(authDAO.getAuth("nonexistent"));
     }
 
+    // Test deleting an auth token
     @Test
     void deleteAuth() throws DataAccessException {
         AuthData auth = new AuthData("token123", "user1");
@@ -43,6 +47,7 @@ public class MySQLAuthDAOTest {
         assertNull(authDAO.getAuth("token123"));
     }
 
+    // Test attempting to delete an auth token that does not exist
     @Test
     void deleteNonexistentAuth() {
         assertThrows(
@@ -51,6 +56,7 @@ public class MySQLAuthDAOTest {
         );
     }
 
+    // Test clearing the auth token database
     @Test
     void clearAuth() throws DataAccessException {
         authDAO.createAuth(new AuthData("token1", "user1"));
@@ -62,6 +68,7 @@ public class MySQLAuthDAOTest {
         assertNull(authDAO.getAuth("token2"));
     }
 
+    // Test creating a duplicate auth token
     @Test
     void createDuplicateAuth() throws DataAccessException {
         AuthData auth = new AuthData("token123", "user1");

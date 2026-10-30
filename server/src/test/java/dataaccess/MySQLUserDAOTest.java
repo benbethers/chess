@@ -10,6 +10,7 @@ public class MySQLUserDAOTest {
 
     private MySQLUserDAO userDAO;
 
+    // Set up tester database before every test
     @BeforeEach
     void setUp() throws DataAccessException {
         DatabaseManager.createDatabase();
@@ -19,6 +20,7 @@ public class MySQLUserDAOTest {
         userDAO.clear();
     }
 
+    // Test making and getting a user
     @Test
     void createAndGetUser() throws DataAccessException {
         UserData user = new UserData(
@@ -32,11 +34,13 @@ public class MySQLUserDAOTest {
         assertEquals(user, userDAO.getUser("user1"));
     }
 
+    // Test trying to retrieve a user that does not exist
     @Test
     void getNonexistentUser() throws DataAccessException {
-        assertNull(userDAO.getUser("nonexistent"));
+        assertNull(userDAO.getUser("doesnotexist"));
     }
 
+    // Test when someone attempts to make a duplicate user
     @Test
     void createDuplicateUser() throws DataAccessException {
         UserData user = new UserData(
@@ -53,6 +57,7 @@ public class MySQLUserDAOTest {
         );
     }
 
+    // CLear users test
     @Test
     void clearUsers() throws DataAccessException {
         userDAO.createUser(new UserData(

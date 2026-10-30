@@ -13,6 +13,7 @@ public class MySQLGameDAOTest {
 
     private MySQLGameDAO gameDAO;
 
+    // Set up tester database before every test
     @BeforeEach
     void setUp() throws DataAccessException {
         DatabaseManager.createDatabase();
@@ -22,6 +23,7 @@ public class MySQLGameDAOTest {
         gameDAO.clear();
     }
 
+    // Test making and getting a game
     @Test
     void createAndGetGame() throws DataAccessException {
         int gameID = gameDAO.createGame("game1");
@@ -36,11 +38,13 @@ public class MySQLGameDAOTest {
         assertEquals(new ChessGame(), game.game());
     }
 
+    // Test attempting to get a game that does not exist
     @Test
     void getNonexistentGame() throws DataAccessException {
         assertNull(gameDAO.getGame(-1));
     }
 
+    // Test making multiple games
     @Test
     void createMultipleGames() throws DataAccessException {
         int game1 = gameDAO.createGame("game1");
@@ -49,6 +53,7 @@ public class MySQLGameDAOTest {
         assertNotEquals(game1, game2);
     }
 
+    // Test the list games method
     @Test
     void listGames() throws DataAccessException {
         gameDAO.createGame("game1");
@@ -59,6 +64,7 @@ public class MySQLGameDAOTest {
         assertEquals(2, games.size());
     }
 
+    // Test updating a game
     @Test
     void updateGame() throws DataAccessException {
         int gameID = gameDAO.createGame("game1");
@@ -78,6 +84,7 @@ public class MySQLGameDAOTest {
         assertEquals(updatedGame, result);
     }
 
+    // Test attempting to update a game that does not exist
     @Test
     void updateNonexistentGame() {
         GameData game = new GameData(
@@ -94,6 +101,7 @@ public class MySQLGameDAOTest {
         );
     }
 
+    // Test clearing all games
     @Test
     void clearGames() throws DataAccessException {
         gameDAO.createGame("game1");
