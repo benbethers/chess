@@ -29,6 +29,49 @@ public class DatabaseManager {
         }
     }
 
+    public static void createTables() throws DataAccessException {
+        String[] statements = {
+                """
+        CREATE TABLE IF NOT EXISTS users (
+            username VARCHAR(255) NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            PRIMARY KEY (username)
+        )
+        """,
+
+                """
+        CREATE TABLE IF NOT EXISTS auth (
+            authToken VARCHAR(255) NOT NULL,
+            username VARCHAR(255) NOT NULL,
+            PRIMARY KEY (authToken)
+        )
+        """,
+
+                """
+        CREATE TABLE IF NOT EXISTS games (
+            gameID INT NOT NULL AUTO_INCREMENT,
+            whiteUsername VARCHAR(255),
+            blackUsername VARCHAR(255),
+            gameName VARCHAR(255) NOT NULL,
+            game TEXT NOT NULL,
+            PRIMARY KEY (gameID)
+        )
+        """
+        };
+
+        try (var conn = getConnection();
+             var statement = conn.createStatement()) {
+
+            for (String sql : statements) {
+                statement.executeUpdate(sql);
+            }
+
+        } catch (SQLException ex) {
+            throw new DataAccessException("Unable to create database tables", ex);
+        }
+    }
+
     /**
      * Create a connection to the database and sets the catalog based upon the
      * properties specified in db.properties. Connections to the database should
