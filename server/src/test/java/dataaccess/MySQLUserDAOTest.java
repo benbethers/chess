@@ -20,9 +20,21 @@ public class MySQLUserDAOTest {
         userDAO.clear();
     }
 
-    // Test making and getting a user
+    // Test making a user
     @Test
-    void createAndGetUser() throws DataAccessException {
+    void createUser() throws DataAccessException {
+        UserData user = new UserData(
+                "user1",
+                "hashedPassword123",
+                "user1@example.com"
+        );
+
+        assertDoesNotThrow(() -> userDAO.createUser(user));
+    }
+
+    // Test getting a user
+    @Test
+    void getUser() throws DataAccessException {
         UserData user = new UserData(
                 "user1",
                 "hashedPassword123",
@@ -57,7 +69,7 @@ public class MySQLUserDAOTest {
         );
     }
 
-    // CLear users test
+    // Clear users test
     @Test
     void clearUsers() throws DataAccessException {
         userDAO.createUser(new UserData(
