@@ -23,9 +23,17 @@ public class MySQLGameDAOTest {
         gameDAO.clear();
     }
 
-    // Test making and getting a game
+    // Test making a game
     @Test
-    void createAndGetGame() throws DataAccessException {
+    void createGame() throws DataAccessException {
+        int gameID = gameDAO.createGame("game1");
+
+        assertTrue(gameID > 0);
+    }
+
+    // Test getting a game
+    @Test
+    void getGame() throws DataAccessException {
         int gameID = gameDAO.createGame("game1");
 
         GameData game = gameDAO.getGame(gameID);
