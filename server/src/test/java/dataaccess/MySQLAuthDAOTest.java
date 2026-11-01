@@ -20,9 +20,17 @@ public class MySQLAuthDAOTest {
         authDAO.clear();
     }
 
-    // Test making an auth token and getting it
+    // Test making an auth token
     @Test
-    void createAndGetAuth() throws DataAccessException {
+    void createAuth() throws DataAccessException {
+        AuthData auth = new AuthData("token123", "user1");
+
+        assertDoesNotThrow(() -> authDAO.createAuth(auth));
+    }
+
+    // Test getting an auth token
+    @Test
+    void getAuth() throws DataAccessException {
         AuthData auth = new AuthData("token123", "user1");
 
         authDAO.createAuth(auth);
