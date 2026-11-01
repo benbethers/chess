@@ -31,6 +31,15 @@ public class MySQLGameDAOTest {
         assertTrue(gameID > 0);
     }
 
+    // Test attempting to create a game with no name
+    @Test
+    void createGameWithoutName() {
+        assertThrows(
+                DataAccessException.class,
+                () -> gameDAO.createGame(null)
+        );
+    }
+
     // Test getting a game
     @Test
     void getGame() throws DataAccessException {
@@ -70,6 +79,12 @@ public class MySQLGameDAOTest {
         Collection<GameData> games = gameDAO.listGames();
 
         assertEquals(2, games.size());
+    }
+
+    // Test listing games when no games exist
+    @Test
+    void listGamesWhenEmpty() throws DataAccessException {
+        assertTrue(gameDAO.listGames().isEmpty());
     }
 
     // Test updating a game
