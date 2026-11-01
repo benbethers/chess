@@ -37,7 +37,17 @@ public class Server {
         userService = new UserService(userDAO, authDAO);
         gameService = new GameService(gameDAO, authDAO);
 
-        // Clear all data (DELETE /db)
+        registerClearEndpoint();
+        registerUserEndpoint();
+        registerLoginEndpoint();
+        registerLogoutEndpoint();
+        registerListGamesEndpoint();
+        registerCreateGameEndpoint();
+        registerJoinGameEndpoint();
+    }
+
+    // Clear all data (DELETE /db)
+    private void registerClearEndpoint() {
         javalin.delete("/db", ctx -> {
             try {
                 clearService.clear();
@@ -46,8 +56,10 @@ public class Server {
                 sendError(ctx, 500, e.getMessage());
             }
         });
+    }
 
-        // Register a new user (POST /user)
+    // Register a new user (POST /user)
+    private void registerUserEndpoint() {
         javalin.post("/user", ctx -> {
             try {
                 RegisterRequest request =
@@ -85,8 +97,10 @@ public class Server {
                 }
             }
         });
+    }
 
-        // Log in (POST /session)
+    // Log in (POST /session)
+    private void registerLoginEndpoint() {
         javalin.post("/session", ctx -> {
             try {
                 LoginRequest request =
@@ -123,8 +137,10 @@ public class Server {
                 }
             }
         });
+    }
 
-        // Log out (DELETE /session)
+    // Log out (DELETE /session)
+    private void registerLogoutEndpoint() {
         javalin.delete("/session", ctx -> {
             try {
                 String authToken = ctx.header("Authorization");
@@ -132,19 +148,13 @@ public class Server {
                 sendJson(ctx, 200, Map.of());
 
             } catch (DataAccessException e) {
-                String message = e.getMessage();
-
-                if (message != null &&
-                        (message.toLowerCase().contains("token") ||
-                                message.toLowerCase().contains("authorization"))) {
-                    sendError(ctx, 401, message);
-                } else {
-                    sendError(ctx, 500, message);
-                }
+                handleAuthError(ctx, e);
             }
         });
+    }
 
-        // List games (GET /game)
+    // List games (GET /game)
+    private void registerListGamesEndpoint() {
         javalin.get("/game", ctx -> {
             try {
                 String authToken = ctx.header("Authorization");
@@ -163,19 +173,13 @@ public class Server {
                 sendJson(ctx, 200, Map.of("games", gameList));
 
             } catch (DataAccessException e) {
-                String message = e.getMessage();
-
-                if (message != null &&
-                        (message.toLowerCase().contains("token") ||
-                                message.toLowerCase().contains("authorization"))) {
-                    sendError(ctx, 401, message);
-                } else {
-                    sendError(ctx, 500, message);
-                }
+                handleAuthError(ctx, e);
             }
         });
+    }
 
-        // Create a game (POST /game)
+    // Create a game (POST /game)
+    private void registerCreateGameEndpoint() {
         javalin.post("/game", ctx -> {
             try {
                 CreateGameRequest request =
@@ -211,8 +215,10 @@ public class Server {
                 }
             }
         });
+    }
 
-        // Join a game (PUT /game)
+    // Join a game (PUT /game)
+    private void registerJoinGameEndpoint() {
         javalin.put("/game", ctx -> {
             try {
                 JoinGameRequest request =
@@ -293,6 +299,22 @@ public class Server {
                 "message",
                 "Error: " + (message == null ? "Unknown error" : message)
         ));
+    }
+
+    // Handle authentication errors in both logout and list games for code quality
+    private void handleAuthError(
+            io.javalin.http.Context ctx,
+            DataAccessException e
+    ) {
+        String message = e.getMessage();
+
+        if (message != null &&
+                (message.toLowerCase().contains("token") ||
+                        message.toLowerCase().contains("authorization"))) {
+            sendError(ctx, 401, message);
+        } else {
+            sendError(ctx, 500, message);
+        }
     }
 
     private record RegisterRequest(
